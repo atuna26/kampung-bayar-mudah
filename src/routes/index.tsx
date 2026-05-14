@@ -1,26 +1,23 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import logo from "@/assets/kampungpay-logo.png";
 
-export const Route = createFileRoute("/")({
-  component: Index,
-});
+export const Route = createFileRoute("/")({ component: Splash });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
+function Splash() {
+  const nav = useNavigate();
+  useEffect(() => {
+    const t = setTimeout(() => nav({ to: "/onboarding" }), 1800);
+    return () => clearTimeout(t);
+  }, [nav]);
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="mx-auto max-w-md min-h-dvh flex flex-col items-center justify-center bg-background px-6 text-center">
+      <div className="absolute inset-0 -z-0 opacity-40 pointer-events-none"
+        style={{ background: "radial-gradient(60% 50% at 50% 30%, var(--primary-soft), transparent 70%)" }} />
+      <img src={logo} alt="KampungPay" className="h-44 w-44 animate-in fade-in zoom-in duration-700" />
+      <p className="mt-2 text-lg font-semibold text-primary">Bayar. Mudah. Bersama.</p>
+      <p className="mt-8 text-xs text-muted-foreground">Untuk komuniti Sabah & Sarawak</p>
+      <Link to="/onboarding" className="mt-6 text-xs text-muted-foreground underline">Langkau</Link>
     </div>
   );
-}
-
-function Index() {
-  return <PlaceholderIndex />;
 }
