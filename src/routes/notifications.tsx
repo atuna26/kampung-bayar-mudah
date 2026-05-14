@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/kp/Shell";
-import { useStore, fmtTime } from "@/lib/kp/store";
+import { useStore } from "@/lib/kp/store";
+import { TimeText } from "@/lib/kp/TimeText";
 import { CheckCircle2, AlertTriangle, Info, XCircle } from "lucide-react";
 
 export const Route = createFileRoute("/notifications")({ component: Notifications });
@@ -23,7 +24,7 @@ function Notifications() {
             <li key={n.id} className="rounded-2xl bg-card border border-border p-4 flex gap-3">
               <span className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${m.cls}`}><m.Icon className="h-5 w-5"/></span>
               <div className="flex-1 min-w-0">
-                <div className="flex items-baseline justify-between gap-2"><p className="font-bold text-sm">{n.title}</p><span className="text-[11px] text-muted-foreground shrink-0">{fmtTime(n.ts)}</span></div>
+                <div className="flex items-baseline justify-between gap-2"><p className="font-bold text-sm">{n.title}</p><span className="text-[11px] text-muted-foreground shrink-0"><TimeText ts={n.ts} /></span></div>
                 <p className="text-sm text-muted-foreground mt-0.5">{n.body}</p>
               </div>
             </li>

@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/kp/Shell";
 import { Send, QrCode, Download, Users, Eye, EyeOff, ArrowUpRight, ArrowDownLeft, Store, Banknote } from "lucide-react";
 import { useState } from "react";
-import { useStore, fmtRM, fmtTime } from "@/lib/kp/store";
+import { useStore, fmtRM } from "@/lib/kp/store";
+import { TimeText } from "@/lib/kp/TimeText";
 
 export const Route = createFileRoute("/home")({ component: Home });
 
@@ -87,7 +88,7 @@ export function TxRow({ t }: { t: any }) {
       <span className="h-10 w-10 rounded-full bg-muted flex items-center justify-center"><c.Icon className={`h-5 w-5 ${c.color}`} /></span>
       <div className="flex-1 min-w-0">
         <p className="font-semibold truncate text-sm">{t.name}</p>
-        <p className="text-xs text-muted-foreground flex items-center gap-1.5">{fmtTime(t.ts)} {statusBadge}</p>
+        <p className="text-xs text-muted-foreground flex items-center gap-1.5"><TimeText ts={t.ts} /> {statusBadge}</p>
       </div>
       <p className={`font-bold text-sm ${c.color}`}>{c.sign}{fmtRM(t.amount)}</p>
     </div>
