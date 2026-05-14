@@ -20,7 +20,7 @@ interface State {
   txs: Tx[];
   connectivity: Connectivity;
   pin: string;
-  language: "ms" | "en";
+  language: "en" | "en";
   user: { name: string; phone: string };
   notifications: { id: string; title: string; body: string; ts: number; kind: "success" | "info" | "warn" | "error" }[];
 }
@@ -37,7 +37,7 @@ let state: State = {
   txs: seed,
   connectivity: "online",
   pin: "1234",
-  language: "ms",
+  language: "en",
   user: { name: "Amina Binti Abdullah", phone: "+60 13-456 7890" },
   notifications: [
     { id: "n1", title: "Money received", body: "RM80.00 from Aunty Siti", ts: Date.now() - 3600_000, kind: "success" },
