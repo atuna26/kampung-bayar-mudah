@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/kp/Shell";
-import { Send, QrCode, Download, Users, Eye, EyeOff, ArrowUpRight, ArrowDownLeft, Store, Banknote } from "lucide-react";
+import { Send, QrCode, Download, Users, Eye, EyeOff, ArrowUpRight, ArrowDownLeft, Store, Banknote, HeartHandshake, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useStore, fmtRM } from "@/lib/kp/store";
 import { TimeText } from "@/lib/kp/TimeText";
@@ -40,6 +40,21 @@ function Home() {
           <Quick to="/receive" icon={Download} label="Receive" />
           <Quick to="/agent" icon={Users} label="Agents" />
         </div>
+
+        <Link
+          to="/guided"
+          className="flex items-center gap-3 p-4 rounded-3xl border-2 border-accent shadow-sm active:bg-muted"
+          style={{ background: "linear-gradient(135deg, var(--primary-soft), var(--accent))" }}
+        >
+          <span className="h-12 w-12 rounded-2xl bg-white flex items-center justify-center shrink-0">
+            <HeartHandshake className="h-6 w-6 text-primary" />
+          </span>
+          <span className="flex-1">
+            <span className="block text-base font-extrabold">Guided Mode</span>
+            <span className="block text-xs text-foreground/80">Big buttons. Simple steps. Send money safely.</span>
+          </span>
+          <ArrowRight className="h-5 w-5 text-primary" />
+        </Link>
 
         <section>
           <div className="flex items-center justify-between mb-2">
