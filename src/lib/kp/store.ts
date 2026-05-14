@@ -1,4 +1,4 @@
-import { useSyncExternalStore, useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 export type TxStatus = "completed" | "pending" | "syncing" | "failed";
 export type TxType = "sent" | "received" | "merchant" | "cashin" | "cashout";
@@ -100,13 +100,4 @@ export function fmtTime(ts: number) {
   const ageMs = Date.now() - ts;
   if (ageMs < 24 * 3600_000) return `${hh}:${mm}`;
   return `${String(d.getUTCDate()).padStart(2, "0")} ${months[d.getUTCMonth()]}`;
-}
-
-// Client-only time renderer that avoids SSR/CSR hydration mismatches when
-// timestamps are derived from Date.now() at module load (server and client
-// each compute their own value).
-export function TimeText({ ts }: { ts: number }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  return <>{mounted ? fmtTime(ts) : ""}</>;
 }
