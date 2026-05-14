@@ -20,6 +20,7 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as HelpRouteImport } from './routes/help'
+import { Route as GuidedRouteImport } from './routes/guided'
 import { Route as CashinRouteImport } from './routes/cashin'
 import { Route as AgentRouteImport } from './routes/agent'
 import { Route as IndexRouteImport } from './routes/index'
@@ -79,6 +80,11 @@ const HelpRoute = HelpRouteImport.update({
   path: '/help',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuidedRoute = GuidedRouteImport.update({
+  id: '/guided',
+  path: '/guided',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CashinRoute = CashinRouteImport.update({
   id: '/cashin',
   path: '/cashin',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agent': typeof AgentRoute
   '/cashin': typeof CashinRoute
+  '/guided': typeof GuidedRoute
   '/help': typeof HelpRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agent': typeof AgentRoute
   '/cashin': typeof CashinRoute
+  '/guided': typeof GuidedRoute
   '/help': typeof HelpRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/agent': typeof AgentRoute
   '/cashin': typeof CashinRoute
+  '/guided': typeof GuidedRoute
   '/help': typeof HelpRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/'
     | '/agent'
     | '/cashin'
+    | '/guided'
     | '/help'
     | '/home'
     | '/login'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/'
     | '/agent'
     | '/cashin'
+    | '/guided'
     | '/help'
     | '/home'
     | '/login'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/'
     | '/agent'
     | '/cashin'
+    | '/guided'
     | '/help'
     | '/home'
     | '/login'
@@ -199,6 +211,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AgentRoute: typeof AgentRoute
   CashinRoute: typeof CashinRoute
+  GuidedRoute: typeof GuidedRoute
   HelpRoute: typeof HelpRoute
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HelpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guided': {
+      id: '/guided'
+      path: '/guided'
+      fullPath: '/guided'
+      preLoaderRoute: typeof GuidedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cashin': {
       id: '/cashin'
       path: '/cashin'
@@ -319,6 +339,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AgentRoute: AgentRoute,
   CashinRoute: CashinRoute,
+  GuidedRoute: GuidedRoute,
   HelpRoute: HelpRoute,
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
@@ -334,3 +355,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
