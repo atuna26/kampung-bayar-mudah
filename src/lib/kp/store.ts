@@ -91,6 +91,8 @@ export function fmtRM(n: number) {
 }
 
 export function fmtTime(ts: number) {
+  // SSR-safe: render nothing on the server, real value after mount.
+  if (typeof window === "undefined") return "";
   const d = new Date(ts);
   // Use UTC + fixed format to avoid SSR/CSR hydration mismatch from
   // server vs client timezone & locale differences.
