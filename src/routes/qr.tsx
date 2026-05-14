@@ -12,7 +12,8 @@ function QR() {
   const [step, setStep] = useState<0|1|2|3>(0);
   const [amount, setAmount] = useState("");
   const merchant = { name: "Mr. Joseph's Mini Market", id: "MRC-23984", location: "Kg. Sandakan, Sabah" };
-  const txs = useStore(s => s.txs.filter(t => t.type==="merchant" || t.type==="received").slice(0,5));
+  const allTxs = useStore(s => s.txs);
+  const txs = allTxs.filter(t => t.type==="merchant" || t.type==="received").slice(0,5);
 
   const pay = () => {
     store.addTx({ type: "merchant", name: merchant.name, amount: Number(amount), status: "completed", note: "QR Payment" });
