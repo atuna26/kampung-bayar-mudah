@@ -20,7 +20,7 @@ function Help() {
         <p className="font-bold text-lg">Hi! Can we help?</p>
         <p className="text-sm text-foreground/80 mt-1">Find answers below, or contact us directly.</p>
         <div className="grid grid-cols-2 gap-2 mt-4">
-          <a href="tel:+601800888888" className="flex items-center justify-center gap-2 h-11 rounded-xl bg-primary text-primary-foreground text-sm font-bold"><Phone className="h-4 w-4"/> Telefon</a>
+          <a href="tel:+601800888888" className="flex items-center justify-center gap-2 h-11 rounded-xl bg-primary text-primary-foreground text-sm font-bold"><Phone className="h-4 w-4"/> Call</a>
           <a href="https://wa.me/60111234567" className="flex items-center justify-center gap-2 h-11 rounded-xl bg-card text-foreground text-sm font-bold border border-border"><MessageCircle className="h-4 w-4"/> WhatsApp</a>
         </div>
       </div>
@@ -39,7 +39,7 @@ function Help() {
         ))}
       </ul>
 
-      <Link to="/agent" className="mt-6 block w-full h-14 leading-[3.5rem] text-center rounded-2xl bg-primary text-primary-foreground font-bold">Cari Local Agents</Link>
+      <Link to="/agent" className="mt-6 block w-full h-14 leading-[3.5rem] text-center rounded-2xl bg-primary text-primary-foreground font-bold">Find a Local Agent</Link>
     </Shell>
   );
 }

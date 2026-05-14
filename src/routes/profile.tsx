@@ -3,9 +3,9 @@ import { Shell } from "@/components/kp/Shell";
 import { useStore, store } from "@/lib/kp/store";
 import { Globe, Lock, HelpCircle, Users, LogOut, ChevronRight, Phone } from "lucide-react";
 
-export const Route = createFileRoute("/profile")({ component: Profilee });
+export const Route = createFileRoute("/profile")({ component: Profile });
 
-function Profilee() {
+function Profile() {
   const user = useStore(s => s.user);
   const lang = useStore(s => s.language);
   return (

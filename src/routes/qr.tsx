@@ -11,7 +11,7 @@ function QR() {
   const [mode, setMode] = useState<"scan"|"merchant">("scan");
   const [step, setStep] = useState<0|1|2|3>(0);
   const [amount, setAmount] = useState("");
-  const merchant = { name: "Kedai Runcit Mr. Joseph", id: "MRC-23984", location: "Kg. Sandakan, Sabah" };
+  const merchant = { name: "Mr. Joseph's Mini Market", id: "MRC-23984", location: "Kg. Sandakan, Sabah" };
   const txs = useStore(s => s.txs.filter(t => t.type==="merchant" || t.type==="received").slice(0,5));
 
   const pay = () => {
@@ -37,7 +37,7 @@ function QR() {
               <p className="text-sm">Point your camera at the shop's QR code</p>
             </div>
           </div>
-          <button onClick={()=>setStep(1)} className="w-full h-12 rounded-2xl bg-secondary text-secondary-foreground font-semibold">Demo: Scan QR Kedai Mr. Joseph</button>
+          <button onClick={()=>setStep(1)} className="w-full h-12 rounded-2xl bg-secondary text-secondary-foreground font-semibold">Demo: Scan Mr. Joseph's Shop QR</button>
         </div>
       )}
 
@@ -74,7 +74,7 @@ function QR() {
       {mode==="scan" && step===2 && (
         <div className="space-y-4">
           <div className="rounded-3xl bg-card border border-border p-5 text-center">
-            <p className="text-sm text-muted-foreground">Bayar to</p>
+            <p className="text-sm text-muted-foreground">Paying to</p>
             <p className="font-bold text-lg mt-1">{merchant.name}</p>
             <p className="text-4xl font-extrabold text-primary mt-3">{fmtRM(Number(amount))}</p>
             <p className="text-xs text-muted-foreground mt-2">Fee: Free</p>
@@ -101,7 +101,7 @@ function QR() {
         <div className="space-y-5">
           <div className="rounded-3xl bg-card border border-border p-5 text-center">
             <p className="text-xs uppercase tracking-wider text-muted-foreground font-bold">My QR</p>
-            <p className="font-bold mt-1">Kedai Runcit Mr. Joseph</p>
+            <p className="font-bold mt-1">Mr. Joseph's Mini Market</p>
             <div className="mx-auto mt-4 h-52 w-52 rounded-2xl bg-foreground p-3">
               <div className="w-full h-full bg-background rounded-lg grid grid-cols-12 grid-rows-12 gap-px p-2">
                 {Array.from({length:144}).map((_,i)=>(
@@ -109,7 +109,7 @@ function QR() {
                 ))}
               </div>
             </div>
-            <p className="text-xs text-muted-foreground mt-3">Tunjukkan QR ini to the customer untuk menerima bayaran</p>
+            <p className="text-xs text-muted-foreground mt-3">Show this QR to the customer to receive payments</p>
           </div>
           <div>
             <div className="flex items-center gap-2 mb-2"><ArrowLeftRight className="h-4 w-4 text-primary"/><h3 className="font-bold text-sm">Recent Receipts</h3></div>

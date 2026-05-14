@@ -94,7 +94,7 @@ function AgentDashboard() {
             <p className="font-bold mb-1">📋 Next steps</p>
             <ol className="list-decimal list-inside text-foreground/80 space-y-0.5 text-xs">
               <li>A confirmation SMS will be sent to the phone number</li>
-              <li>Bantu the customer tetapkan PIN 4 angka</li>
+              <li>Help the customer set a 4-digit PIN</li>
               <li>Account ready to use!</li>
             </ol>
           </div>
@@ -105,7 +105,7 @@ function AgentDashboard() {
           <Input label={`Amount ${op==="cashin"?"Tunai Diterima":"Withdrawal of"}`} value={amount} onChange={setAmount} placeholder="0.00" type="tel"/>
           <div className="rounded-2xl bg-card border border-border p-4 flex items-center gap-3">
             <Banknote className="h-6 w-6 text-primary"/>
-            <div className="text-sm"><p className="font-bold">{op==="cashin"?"User hands over cash":"Bayar tunai to pengguna"}</p><p className="text-xs text-muted-foreground">Fee ejen: 1% (RM{((Number(amount)||0)*0.01).toFixed(2)})</p></div>
+            <div className="text-sm"><p className="font-bold">{op==="cashin"?"User hands over cash":"Pay cash to the user"}</p><p className="text-xs text-muted-foreground">Agent fee: 1% (RM{((Number(amount)||0)*0.01).toFixed(2)})</p></div>
           </div>
         </>
       )}
