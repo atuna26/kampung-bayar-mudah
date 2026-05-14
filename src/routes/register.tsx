@@ -11,7 +11,7 @@ function Register() {
   const [pin, setPin] = useState("");
 
   return (
-    <Shell title="Daftar Akaun" back="/onboarding" hideNav right={<Link to="/agent" className="inline-flex items-center gap-1 text-xs font-semibold text-primary bg-primary-soft px-3 py-1.5 rounded-full"><HelpCircle className="h-3.5 w-3.5"/> Perlu bantuan?</Link>}>
+    <Shell title="Create Account" back="/onboarding" hideNav right={<Link to="/agent" className="inline-flex items-center gap-1 text-xs font-semibold text-primary bg-primary-soft px-3 py-1.5 rounded-full"><HelpCircle className="h-3.5 w-3.5"/> Need help?</Link>}>
       <div className="space-y-5">
         <div className="flex gap-1.5">
           {[0,1,2].map(i => <span key={i} className={`h-1.5 flex-1 rounded-full ${i<=step?"bg-primary":"bg-border"}`}/>)}
@@ -19,17 +19,17 @@ function Register() {
 
         {step===0 && (
           <div className="space-y-4">
-            <h2 className="text-xl font-bold">Maklumat Anda</h2>
-            <Field icon={User} label="Nama Penuh" placeholder="Cth: Amina Binti Abdullah" />
-            <Field icon={Phone} label="Nombor Telefon" placeholder="+60 13-456 7890" type="tel" />
-            <button onClick={()=>setStep(1)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold">Seterusnya</button>
+            <h2 className="text-xl font-bold">Your Details</h2>
+            <Field icon={User} label="Full Name" placeholder="e.g. Amina Binti Abdullah" />
+            <Field icon={Phone} label="Phone Number" placeholder="+60 13-456 7890" type="tel" />
+            <button onClick={()=>setStep(1)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold">Next</button>
           </div>
         )}
 
         {step===1 && (
           <div className="space-y-4">
-            <h2 className="text-xl font-bold">Tetapkan PIN 4 angka</h2>
-            <p className="text-sm text-muted-foreground">PIN ini melindungi setiap transaksi anda. Jangan kongsi dengan sesiapa.</p>
+            <h2 className="text-xl font-bold">Set a 4-digit PIN</h2>
+            <p className="text-sm text-muted-foreground">This PIN protects every transaction. Never share it with anyone.</p>
             <div className="flex justify-center gap-3 my-6">
               {[0,1,2,3].map(i=> <div key={i} className={`h-14 w-14 rounded-2xl border-2 flex items-center justify-center text-2xl font-bold ${pin.length>i?"bg-primary-soft border-primary text-primary":"bg-muted border-border"}`}>{pin.length>i?"●":""}</div>)}
             </div>
@@ -39,21 +39,21 @@ function Register() {
                   className={`h-16 rounded-2xl text-2xl font-bold ${k?"bg-card shadow-sm active:bg-muted":"opacity-0"}`}>{k}</button>
               ))}
             </div>
-            <button disabled={pin.length<4} onClick={()=>setStep(2)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold disabled:opacity-50">Sahkan PIN</button>
+            <button disabled={pin.length<4} onClick={()=>setStep(2)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold disabled:opacity-50">Confirm PIN</button>
           </div>
         )}
 
         {step===2 && (
           <div className="space-y-4">
-            <h2 className="text-xl font-bold">Pengesahan ID (Pilihan)</h2>
-            <p className="text-sm text-muted-foreground">Anda boleh skip ini. Ejen tempatan boleh bantu sahkan ID anda kemudian.</p>
-            <Field icon={IdCard} label="No. Kad Pengenalan" placeholder="Pilihan" />
+            <h2 className="text-xl font-bold">ID Verification (Optional)</h2>
+            <p className="text-sm text-muted-foreground">You can skip this. A local agent can help verify your ID later.</p>
+            <Field icon={IdCard} label="National ID Number" placeholder="Optional" />
             <div className="rounded-2xl bg-primary-soft p-4 flex gap-3">
               <ShieldCheck className="h-6 w-6 text-primary shrink-0" />
-              <p className="text-sm text-foreground">Maklumat anda disimpan dengan selamat. Hanya anda boleh akses akaun ini.</p>
+              <p className="text-sm text-foreground">Your information is stored securely. Only you can access this account.</p>
             </div>
-            <button onClick={()=>nav({to:"/home"})} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold">Aktifkan Akaun</button>
-            <Link to="/home" className="block text-center text-sm text-muted-foreground">Langkau buat masa ini</Link>
+            <button onClick={()=>nav({to:"/home"})} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold">Activate Account</button>
+            <Link to="/home" className="block text-center text-sm text-muted-foreground">Skip for now</Link>
           </div>
         )}
       </div>

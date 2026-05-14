@@ -11,20 +11,20 @@ function QR() {
   const [mode, setMode] = useState<"scan"|"merchant">("scan");
   const [step, setStep] = useState<0|1|2|3>(0);
   const [amount, setAmount] = useState("");
-  const merchant = { name: "Kedai Runcit Pak Joseph", id: "MRC-23984", location: "Kg. Sandakan, Sabah" };
+  const merchant = { name: "Mr. Joseph's Mini Market", id: "MRC-23984", location: "Kg. Sandakan, Sabah" };
   const txs = useStore(s => s.txs.filter(t => t.type==="merchant" || t.type==="received").slice(0,5));
 
   const pay = () => {
-    store.addTx({ type: "merchant", name: merchant.name, amount: Number(amount), status: "completed", note: "Pembayaran QR" });
-    store.notify({ title: "Pembayaran berjaya", body: `RM${amount} kepada ${merchant.name}.`, kind: "success" });
+    store.addTx({ type: "merchant", name: merchant.name, amount: Number(amount), status: "completed", note: "QR Payment" });
+    store.notify({ title: "Payment successful", body: `RM${amount} to ${merchant.name}.`, kind: "success" });
     setStep(3);
   };
 
   return (
-    <Shell title="QR Pembayaran">
+    <Shell title="QR Payment">
       <div className="flex p-1 rounded-2xl bg-muted mb-4">
-        <button onClick={()=>{setMode("scan"); setStep(0); setAmount("");}} className={`flex-1 h-10 rounded-xl text-sm font-bold ${mode==="scan"?"bg-card shadow":"text-muted-foreground"}`}>Bayar Kedai</button>
-        <button onClick={()=>setMode("merchant")} className={`flex-1 h-10 rounded-xl text-sm font-bold ${mode==="merchant"?"bg-card shadow":"text-muted-foreground"}`}>Saya Peniaga</button>
+        <button onClick={()=>{setMode("scan"); setStep(0); setAmount("");}} className={`flex-1 h-10 rounded-xl text-sm font-bold ${mode==="scan"?"bg-card shadow":"text-muted-foreground"}`}>Pay Shop</button>
+        <button onClick={()=>setMode("merchant")} className={`flex-1 h-10 rounded-xl text-sm font-bold ${mode==="merchant"?"bg-card shadow":"text-muted-foreground"}`}>I'm a Merchant</button>
       </div>
 
       {mode==="scan" && step===0 && (
@@ -34,10 +34,10 @@ function QR() {
             <div className="absolute left-6 right-6 h-0.5 bg-primary animate-pulse" style={{ top: "50%" }} />
             <div className="text-center text-background/80 px-6 z-10">
               <QrCode className="h-14 w-14 mx-auto mb-2 opacity-60"/>
-              <p className="text-sm">Halakan kamera ke kod QR kedai</p>
+              <p className="text-sm">Point your camera at the shop's QR code</p>
             </div>
           </div>
-          <button onClick={()=>setStep(1)} className="w-full h-12 rounded-2xl bg-secondary text-secondary-foreground font-semibold">Demo: Imbas QR Kedai Pak Joseph</button>
+          <button onClick={()=>setStep(1)} className="w-full h-12 rounded-2xl bg-secondary text-secondary-foreground font-semibold">Demo: Scan Mr. Joseph's Shop QR</button>
         </div>
       )}
 
@@ -49,10 +49,10 @@ function QR() {
               <p className="font-bold">{merchant.name}</p>
               <p className="text-xs text-muted-foreground">{merchant.location} · {merchant.id}</p>
             </div>
-            <span className="text-xs font-bold text-success bg-success/15 px-2 py-1 rounded">Disahkan</span>
+            <span className="text-xs font-bold text-success bg-success/15 px-2 py-1 rounded">Verified</span>
           </div>
           <div className="text-center py-4">
-            <p className="text-sm text-muted-foreground">Masukkan jumlah</p>
+            <p className="text-sm text-muted-foreground">Enter amount</p>
             <div className="flex items-baseline justify-center gap-1 mt-1">
               <span className="text-2xl font-bold text-muted-foreground">RM</span>
               <span className="text-5xl font-extrabold">{amount || "0"}</span>
@@ -67,32 +67,32 @@ function QR() {
               }} className="h-14 rounded-2xl text-xl font-bold bg-card shadow-sm active:bg-muted">{k}</button>
             ))}
           </div>
-          <button disabled={!Number(amount)} onClick={()=>setStep(2)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold disabled:opacity-50">Sahkan Bayaran</button>
+          <button disabled={!Number(amount)} onClick={()=>setStep(2)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold disabled:opacity-50">Confirm Payment</button>
         </div>
       )}
 
       {mode==="scan" && step===2 && (
         <div className="space-y-4">
           <div className="rounded-3xl bg-card border border-border p-5 text-center">
-            <p className="text-sm text-muted-foreground">Bayar kepada</p>
+            <p className="text-sm text-muted-foreground">Paying to</p>
             <p className="font-bold text-lg mt-1">{merchant.name}</p>
             <p className="text-4xl font-extrabold text-primary mt-3">{fmtRM(Number(amount))}</p>
-            <p className="text-xs text-muted-foreground mt-2">Yuran: Percuma</p>
+            <p className="text-xs text-muted-foreground mt-2">Fee: Free</p>
           </div>
-          <button onClick={pay} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold">Sahkan dengan PIN</button>
-          <button onClick={()=>setStep(1)} className="w-full h-12 rounded-2xl bg-secondary text-secondary-foreground font-semibold">Kembali</button>
+          <button onClick={pay} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold">Confirm with PIN</button>
+          <button onClick={()=>setStep(1)} className="w-full h-12 rounded-2xl bg-secondary text-secondary-foreground font-semibold">Back</button>
         </div>
       )}
 
       {mode==="scan" && step===3 && (
         <div className="flex flex-col items-center text-center pt-10">
           <div className="h-24 w-24 rounded-full bg-success/20 flex items-center justify-center"><CheckCircle2 className="h-14 w-14 text-success"/></div>
-          <h2 className="mt-5 text-2xl font-extrabold">Pembayaran Berjaya</h2>
+          <h2 className="mt-5 text-2xl font-extrabold">Payment Successful</h2>
           <p className="text-4xl font-extrabold text-primary mt-3">{fmtRM(Number(amount))}</p>
-          <p className="text-sm text-muted-foreground">kepada {merchant.name}</p>
+          <p className="text-sm text-muted-foreground">to {merchant.name}</p>
           <div className="mt-8 w-full space-y-3">
-            <button onClick={()=>{setStep(0); setAmount("");}} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold">Bayar lagi</button>
-            <button onClick={()=>nav({to:"/home"})} className="w-full h-12 rounded-2xl bg-secondary text-secondary-foreground font-semibold">Kembali ke Utama</button>
+            <button onClick={()=>{setStep(0); setAmount("");}} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold">Pay again</button>
+            <button onClick={()=>nav({to:"/home"})} className="w-full h-12 rounded-2xl bg-secondary text-secondary-foreground font-semibold">Back to Home</button>
           </div>
         </div>
       )}
@@ -100,8 +100,8 @@ function QR() {
       {mode==="merchant" && (
         <div className="space-y-5">
           <div className="rounded-3xl bg-card border border-border p-5 text-center">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground font-bold">QR Saya</p>
-            <p className="font-bold mt-1">Kedai Runcit Pak Joseph</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground font-bold">My QR</p>
+            <p className="font-bold mt-1">Mr. Joseph's Mini Market</p>
             <div className="mx-auto mt-4 h-52 w-52 rounded-2xl bg-foreground p-3">
               <div className="w-full h-full bg-background rounded-lg grid grid-cols-12 grid-rows-12 gap-px p-2">
                 {Array.from({length:144}).map((_,i)=>(
@@ -109,14 +109,14 @@ function QR() {
                 ))}
               </div>
             </div>
-            <p className="text-xs text-muted-foreground mt-3">Tunjukkan QR ini kepada pelanggan untuk menerima bayaran</p>
+            <p className="text-xs text-muted-foreground mt-3">Show this QR to the customer to receive payments</p>
           </div>
           <div>
-            <div className="flex items-center gap-2 mb-2"><ArrowLeftRight className="h-4 w-4 text-primary"/><h3 className="font-bold text-sm">Penerimaan Terkini</h3></div>
+            <div className="flex items-center gap-2 mb-2"><ArrowLeftRight className="h-4 w-4 text-primary"/><h3 className="font-bold text-sm">Recent Receipts</h3></div>
             <div className="rounded-2xl bg-card border border-border divide-y divide-border overflow-hidden">
               {txs.map(t => (
                 <div key={t.id} className="p-3.5 flex items-center justify-between">
-                  <div><p className="font-semibold text-sm">{t.name}</p><p className="text-xs text-muted-foreground">Pembayaran QR</p></div>
+                  <div><p className="font-semibold text-sm">{t.name}</p><p className="text-xs text-muted-foreground">QR Payment</p></div>
                   <p className="font-bold text-success">+{fmtRM(t.amount)}</p>
                 </div>
               ))}

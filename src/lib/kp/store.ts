@@ -20,16 +20,16 @@ interface State {
   txs: Tx[];
   connectivity: Connectivity;
   pin: string;
-  language: "ms" | "en";
+  language: "en" | "en";
   user: { name: string; phone: string };
   notifications: { id: string; title: string; body: string; ts: number; kind: "success" | "info" | "warn" | "error" }[];
 }
 
 const seed: Tx[] = [
-  { id: "t1", type: "received", name: "Mak Cik Siti", amount: 80, ts: Date.now() - 3600_000, status: "completed" },
-  { id: "t2", type: "merchant", name: "Kedai Runcit Ah Seng", amount: 12.5, ts: Date.now() - 7200_000, status: "completed", note: "Beras & gula" },
-  { id: "t3", type: "sent", name: "Adik Hafiz", amount: 50, ts: Date.now() - 86400_000, status: "completed" },
-  { id: "t4", type: "received", name: "Pak Long Ahmad", amount: 200, ts: Date.now() - 2 * 86400_000, status: "completed" },
+  { id: "t1", type: "received", name: "Aunty Siti", amount: 80, ts: Date.now() - 3600_000, status: "completed" },
+  { id: "t2", type: "merchant", name: "Ah Seng Mini Market", amount: 12.5, ts: Date.now() - 7200_000, status: "completed", note: "Rice & sugar" },
+  { id: "t3", type: "sent", name: "Brother Hafiz", amount: 50, ts: Date.now() - 86400_000, status: "completed" },
+  { id: "t4", type: "received", name: "Uncle Ahmad", amount: 200, ts: Date.now() - 2 * 86400_000, status: "completed" },
 ];
 
 let state: State = {
@@ -37,11 +37,11 @@ let state: State = {
   txs: seed,
   connectivity: "online",
   pin: "1234",
-  language: "ms",
+  language: "en",
   user: { name: "Amina Binti Abdullah", phone: "+60 13-456 7890" },
   notifications: [
-    { id: "n1", title: "Wang diterima", body: "RM80.00 daripada Mak Cik Siti", ts: Date.now() - 3600_000, kind: "success" },
-    { id: "n2", title: "Isyarat lemah", body: "Sambungan internet tidak stabil. Transaksi akan disimpan dengan selamat.", ts: Date.now() - 4 * 3600_000, kind: "warn" },
+    { id: "n1", title: "Money received", body: "RM80.00 from Aunty Siti", ts: Date.now() - 3600_000, kind: "success" },
+    { id: "n2", title: "Weak signal", body: "Internet connection is unstable. Transactions will be saved safely.", ts: Date.now() - 4 * 3600_000, kind: "warn" },
   ],
 };
 

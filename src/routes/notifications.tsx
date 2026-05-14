@@ -15,7 +15,7 @@ const iconMap = {
 function Notifications() {
   const list = useStore(s => s.notifications);
   return (
-    <Shell title="Notifikasi" back="/home">
+    <Shell title="Notifications" back="/home">
       <ul className="space-y-2">
         {list.map(n => {
           const m = iconMap[n.kind];
@@ -29,7 +29,7 @@ function Notifications() {
             </li>
           );
         })}
-        {list.length===0 && <p className="text-center text-sm text-muted-foreground py-12">Tiada notifikasi</p>}
+        {list.length===0 && <p className="text-center text-sm text-muted-foreground py-12">No notifications</p>}
       </ul>
     </Shell>
   );
