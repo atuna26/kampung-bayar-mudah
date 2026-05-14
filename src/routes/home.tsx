@@ -9,7 +9,8 @@ export const Route = createFileRoute("/home")({ component: Home });
 
 function Home() {
   const balance = useStore(s => s.balance);
-  const txs = useStore(s => s.txs.slice(0, 4));
+  const allTxs = useStore(s => s.txs);
+  const txs = allTxs.slice(0, 4);
   const user = useStore(s => s.user);
   const [hide, setHide] = useState(false);
 
