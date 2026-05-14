@@ -12,11 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TransactionsRouteImport } from './routes/transactions'
 import { Route as SendRouteImport } from './routes/send'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ReceiveRouteImport } from './routes/receive'
 import { Route as QrRouteImport } from './routes/qr'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as HelpRouteImport } from './routes/help'
+import { Route as CashinRouteImport } from './routes/cashin'
+import { Route as AgentRouteImport } from './routes/agent'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TransactionsRoute = TransactionsRouteImport.update({
@@ -34,6 +39,11 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReceiveRoute = ReceiveRouteImport.update({
+  id: '/receive',
+  path: '/receive',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QrRoute = QrRouteImport.update({
   id: '/qr',
   path: '/qr',
@@ -49,6 +59,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -59,6 +74,21 @@ const HomeRoute = HomeRouteImport.update({
   path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CashinRoute = CashinRouteImport.update({
+  id: '/cashin',
+  path: '/cashin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgentRoute = AgentRouteImport.update({
+  id: '/agent',
+  path: '/agent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -67,22 +97,32 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/agent': typeof AgentRoute
+  '/cashin': typeof CashinRoute
+  '/help': typeof HelpRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/qr': typeof QrRoute
+  '/receive': typeof ReceiveRoute
   '/register': typeof RegisterRoute
   '/send': typeof SendRoute
   '/transactions': typeof TransactionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/agent': typeof AgentRoute
+  '/cashin': typeof CashinRoute
+  '/help': typeof HelpRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/qr': typeof QrRoute
+  '/receive': typeof ReceiveRoute
   '/register': typeof RegisterRoute
   '/send': typeof SendRoute
   '/transactions': typeof TransactionsRoute
@@ -90,11 +130,16 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/agent': typeof AgentRoute
+  '/cashin': typeof CashinRoute
+  '/help': typeof HelpRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/qr': typeof QrRoute
+  '/receive': typeof ReceiveRoute
   '/register': typeof RegisterRoute
   '/send': typeof SendRoute
   '/transactions': typeof TransactionsRoute
@@ -103,33 +148,48 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/agent'
+    | '/cashin'
+    | '/help'
     | '/home'
     | '/login'
+    | '/notifications'
     | '/onboarding'
     | '/profile'
     | '/qr'
+    | '/receive'
     | '/register'
     | '/send'
     | '/transactions'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/agent'
+    | '/cashin'
+    | '/help'
     | '/home'
     | '/login'
+    | '/notifications'
     | '/onboarding'
     | '/profile'
     | '/qr'
+    | '/receive'
     | '/register'
     | '/send'
     | '/transactions'
   id:
     | '__root__'
     | '/'
+    | '/agent'
+    | '/cashin'
+    | '/help'
     | '/home'
     | '/login'
+    | '/notifications'
     | '/onboarding'
     | '/profile'
     | '/qr'
+    | '/receive'
     | '/register'
     | '/send'
     | '/transactions'
@@ -137,11 +197,16 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AgentRoute: typeof AgentRoute
+  CashinRoute: typeof CashinRoute
+  HelpRoute: typeof HelpRoute
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
+  NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
   QrRoute: typeof QrRoute
+  ReceiveRoute: typeof ReceiveRoute
   RegisterRoute: typeof RegisterRoute
   SendRoute: typeof SendRoute
   TransactionsRoute: typeof TransactionsRoute
@@ -170,6 +235,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/receive': {
+      id: '/receive'
+      path: '/receive'
+      fullPath: '/receive'
+      preLoaderRoute: typeof ReceiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/qr': {
       id: '/qr'
       path: '/qr'
@@ -191,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -205,6 +284,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cashin': {
+      id: '/cashin'
+      path: '/cashin'
+      fullPath: '/cashin'
+      preLoaderRoute: typeof CashinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agent': {
+      id: '/agent'
+      path: '/agent'
+      fullPath: '/agent'
+      preLoaderRoute: typeof AgentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -217,11 +317,16 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AgentRoute: AgentRoute,
+  CashinRoute: CashinRoute,
+  HelpRoute: HelpRoute,
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
+  NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
   QrRoute: QrRoute,
+  ReceiveRoute: ReceiveRoute,
   RegisterRoute: RegisterRoute,
   SendRoute: SendRoute,
   TransactionsRoute: TransactionsRoute,
