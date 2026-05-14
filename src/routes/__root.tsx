@@ -7,6 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import appCss from "../styles.css?url";
 
@@ -112,6 +113,39 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    // Suppress noisy errors from third-party browser extensions (e.g. Ghostery)
+    // that listen to postMessage events and assume payloads are strings.
+    // These errors originate outside our app but bubble up to React's error boundary.
+    const isExtensionNoise = (msg: unknown) => {
+      const s = typeof msg === "string" ? msg : (msg as any)?.message ?? "";
+      return (
+        typeof s === "string" &&
+        (s.includes("GhosteryTrackingDetection") ||
+          s.includes("message.data.startsWith") ||
+          s.includes("startsWith is not a function"))
+      );
+    };
+    const onError = (e: ErrorEvent) => {
+      if (isExtensionNoise(e.message) || isExtensionNoise(e.error)) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+      }
+    };
+    const onRejection = (e: PromiseRejectionEvent) => {
+      if (isExtensionNoise(e.reason)) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("error", onError, true);
+    window.addEventListener("unhandledrejection", onRejection, true);
+    return () => {
+      window.removeEventListener("error", onError, true);
+      window.removeEventListener("unhandledrejection", onRejection, true);
+    };
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
