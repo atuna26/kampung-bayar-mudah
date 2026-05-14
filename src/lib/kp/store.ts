@@ -20,7 +20,7 @@ interface State {
   txs: Tx[];
   connectivity: Connectivity;
   pin: string;
-  language: "en" | "en";
+  language: "en" | "ms";
   user: { name: string; phone: string };
   notifications: { id: string; title: string; body: string; ts: number; kind: "success" | "info" | "warn" | "error" }[];
 }
