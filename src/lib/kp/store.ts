@@ -92,8 +92,12 @@ export function fmtRM(n: number) {
 
 export function fmtTime(ts: number) {
   const d = new Date(ts);
-  const now = new Date();
-  const sameDay = d.toDateString() === now.toDateString();
-  if (sameDay) return d.toLocaleTimeString("en-MY", { hour: "2-digit", minute: "2-digit" });
-  return d.toLocaleDateString("en-MY", { day: "2-digit", month: "short" });
+  // Use UTC + fixed format to avoid SSR/CSR hydration mismatch from
+  // server vs client timezone & locale differences.
+  const hh = String(d.getUTCHours()).padStart(2, "0");
+  const mm = String(d.getUTCMinutes()).padStart(2, "0");
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const ageMs = Date.now() - ts;
+  if (ageMs < 24 * 3600_000) return `${hh}:${mm}`;
+  return `${String(d.getUTCDate()).padStart(2, "0")} ${months[d.getUTCMonth()]}`;
 }
