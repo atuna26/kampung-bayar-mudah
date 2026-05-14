@@ -6,10 +6,10 @@ import logo from "@/assets/kampungpay-logo.png";
 export const Route = createFileRoute("/onboarding")({ component: Onboarding });
 
 const slides = [
-  { Icon: Wallet, title: "Hantar wang dengan mudah", body: "Hanya beberapa ketukan untuk hantar wang kepada keluarga & rakan." },
-  { Icon: WifiOff, title: "Boleh guna walaupun internet lemah", body: "Transaksi anda disimpan dengan selamat dan dihantar bila ada sambungan." },
-  { Icon: ShieldCheck, title: "Selamat & kos rendah", body: "PIN peribadi dan pengesahan penuh untuk setiap transaksi." },
-  { Icon: Users, title: "Bantuan ejen tempatan", body: "Ejen kampung sentiasa sedia membantu anda mendaftar dan tambah nilai." },
+  { Icon: Wallet, title: "Send money easily", body: "Just a few taps to send money to family & friends." },
+  { Icon: WifiOff, title: "Works even with weak internet", body: "Your transactions are saved safely and sent when you're back online." },
+  { Icon: ShieldCheck, title: "Safe & low cost", body: "Private PIN and full confirmation for every transaction." },
+  { Icon: Users, title: "Local agent support", body: "Village agents are always ready to help you register and top up." },
 ];
 
 function Onboarding() {
@@ -20,7 +20,7 @@ function Onboarding() {
     <div className="mx-auto max-w-md min-h-dvh flex flex-col bg-background">
       <div className="flex items-center justify-between px-5 py-4">
         <img src={logo} alt="" className="h-9 w-9 rounded-full" />
-        <Link to="/login" className="text-sm text-muted-foreground">Langkau</Link>
+        <Link to="/login" className="text-sm text-muted-foreground">Skip</Link>
       </div>
       <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
         <div className="h-40 w-40 rounded-full bg-primary-soft flex items-center justify-center">
@@ -36,11 +36,11 @@ function Onboarding() {
       </div>
       <div className="px-6 pb-8 space-y-3">
         {!last ? (
-          <button onClick={() => setI(i + 1)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold">Seterusnya</button>
+          <button onClick={() => setI(i + 1)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold">Next</button>
         ) : (
-          <Link to="/register" className="block w-full h-14 leading-[3.5rem] rounded-2xl bg-primary text-primary-foreground text-lg font-bold text-center">Buka Akaun</Link>
+          <Link to="/register" className="block w-full h-14 leading-[3.5rem] rounded-2xl bg-primary text-primary-foreground text-lg font-bold text-center">Create Account</Link>
         )}
-        <Link to="/login" className="block w-full h-12 leading-[3rem] rounded-2xl bg-secondary text-secondary-foreground text-base font-semibold text-center">Saya sudah ada akaun</Link>
+        <Link to="/login" className="block w-full h-12 leading-[3rem] rounded-2xl bg-secondary text-secondary-foreground text-base font-semibold text-center">I already have an account</Link>
       </div>
     </div>
   );
