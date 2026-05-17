@@ -9,8 +9,8 @@ function CashIn() {
     <Shell title="Top Up" back="/home">
       <div className="rounded-3xl bg-primary-soft p-5">
         <Users className="h-8 w-8 text-primary"/>
-        <p className="mt-3 font-bold">Top-up of melalui ejen tempatan</p>
-        <p className="text-sm text-foreground/80 mt-1">Bawa wang tunai to ejen berdekatan. Mereka akan masukkan ke dompet anda dengan segera.</p>
+        <p className="mt-3 font-bold">Top up via your local agent</p>
+        <p className="text-sm text-foreground/80 mt-1">Bring cash to a nearby agent. They will add it to your wallet straight away — no fees.</p>
       </div>
       <div className="mt-4 rounded-2xl bg-card border border-border p-4">
         <div className="flex items-start gap-3">
