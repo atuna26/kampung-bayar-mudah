@@ -104,6 +104,21 @@ function Quick({ to, icon: Icon, label }: any) {
   );
 }
 
+function InsightBar({ label, value, max, tone }: { label: string; value: number; max: number; tone: "success" | "destructive" }) {
+  const pct = Math.round((value / max) * 100);
+  return (
+    <div>
+      <div className="flex justify-between text-xs mb-1">
+        <span className="text-muted-foreground">{label}</span>
+        <span className={`font-bold ${tone === "success" ? "text-success" : "text-destructive"}`}>{fmtRM(value)}</span>
+      </div>
+      <div className="h-2 rounded-full bg-muted overflow-hidden">
+        <div className={`h-full rounded-full ${tone === "success" ? "bg-success" : "bg-destructive"}`} style={{ width: `${pct}%` }} />
+      </div>
+    </div>
+  );
+}
+
 export function TxRow({ t }: { t: any }) {
   const cfg = {
     sent: { Icon: ArrowUpRight, color: "text-destructive", sign: "-" },
