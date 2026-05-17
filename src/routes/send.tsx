@@ -3,6 +3,7 @@ import { Shell } from "@/components/kp/Shell";
 import { useState } from "react";
 import { Search, ChevronRight, ShieldCheck, WifiOff, CheckCircle2, Loader2 } from "lucide-react";
 import { useStore, store, fmtRM } from "@/lib/kp/store";
+import { OFFLINE_TX_LIMIT, OFFLINE_TX_EXPIRY_HOURS, TIER_LIMITS } from "@/lib/kp/store";
 
 export const Route = createFileRoute("/send")({ component: Send });
 
@@ -17,11 +18,17 @@ const contacts = [
 function Send() {
   const nav = useNavigate();
   const conn = useStore(s => s.connectivity);
+  const tier = useStore(s => s.tier);
   const [step, setStep] = useState<0|1|2|3>(0);
   const [recipient, setRecipient] = useState<typeof contacts[0] | null>(null);
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const fee = 0;
+  const amt = Number(amount) || 0;
+  const tierLimit = TIER_LIMITS[tier].perTx;
+  const overTierLimit = amt > tierLimit;
+  const overOfflineLimit = conn === "offline" && amt > OFFLINE_TX_LIMIT;
+  const blocked = overTierLimit || overOfflineLimit;
 
   const finish = () => {
     setStep(3);
@@ -72,7 +79,13 @@ function Send() {
               <span className="text-3xl font-bold text-muted-foreground">RM</span>
               <span className="text-6xl font-extrabold">{amount || "0"}</span>
             </div>
-            <p className="text-xs text-muted-foreground mt-2">Fee: {fmtRM(fee)} (Free)</p>
+          <p className="text-xs text-muted-foreground mt-2">Fee: {fmtRM(fee)} · No hidden charges</p>
+          {overTierLimit && (
+            <p className="text-xs text-destructive mt-1 font-semibold">Over your {TIER_LIMITS[tier].label} limit of {fmtRM(tierLimit)}. Verify with MyKad to raise it.</p>
+          )}
+          {overOfflineLimit && !overTierLimit && (
+            <p className="text-xs text-warning-foreground mt-1 font-semibold">Offline limit is {fmtRM(OFFLINE_TX_LIMIT)} per transaction.</p>
+          )}
           </div>
           <div className="grid grid-cols-3 gap-3">
             {["1","2","3","4","5","6","7","8","9",".","0","⌫"].map(k=>(
@@ -84,7 +97,7 @@ function Send() {
             ))}
           </div>
           <input value={note} onChange={e=>setNote(e.target.value)} placeholder="Message (optional)" className="w-full h-12 px-4 rounded-2xl bg-card border border-border outline-none text-sm focus:border-primary"/>
-          <button disabled={!Number(amount)} onClick={()=>setStep(2)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold disabled:opacity-50">Next</button>
+          <button disabled={!amt || blocked} onClick={()=>setStep(2)} className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-bold disabled:opacity-50">Next</button>
         </div>
       )}
 
@@ -108,7 +121,7 @@ function Send() {
               <WifiOff className="h-5 w-5 text-warning-foreground shrink-0 mt-0.5"/>
               <div>
                 <p className="font-bold text-sm">No internet connection</p>
-                <p className="text-xs text-foreground/80 mt-0.5">Your transaction will be saved safely and sent automatically when you're back online.</p>
+                <p className="text-xs text-foreground/80 mt-0.5">Saved safely and sent automatically when you reconnect. Pending transactions expire after {OFFLINE_TX_EXPIRY_HOURS} hours if not synced.</p>
               </div>
             </div>
           )}

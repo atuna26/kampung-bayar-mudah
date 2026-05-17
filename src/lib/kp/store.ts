@@ -15,12 +15,24 @@ export interface Tx {
 
 export type Connectivity = "online" | "weak" | "offline";
 
+// Offline safety policy (Section 7 — updated requirements)
+export const OFFLINE_TX_LIMIT = 250; // RM max per offline transaction
+export const OFFLINE_TX_EXPIRY_HOURS = 24; // pending tx auto-cancel window
+
+// Tiered KYC (Section 7 — identity verification)
+export type Tier = "basic" | "verified";
+export const TIER_LIMITS: Record<Tier, { perTx: number; dailyBalance: number; label: string }> = {
+  basic: { perTx: 500, dailyBalance: 1000, label: "Basic" },
+  verified: { perTx: 5000, dailyBalance: 20000, label: "Verified (MyKad)" },
+};
+
 interface State {
   balance: number;
   txs: Tx[];
   connectivity: Connectivity;
   pin: string;
   language: "en" | "ms";
+  tier: Tier;
   user: { name: string; phone: string };
   notifications: { id: string; title: string; body: string; ts: number; kind: "success" | "info" | "warn" | "error" }[];
 }
@@ -38,6 +50,7 @@ let state: State = {
   connectivity: "online",
   pin: "1234",
   language: "en",
+  tier: "basic",
   user: { name: "Amina Binti Abdullah", phone: "+60 13-456 7890" },
   notifications: [
     { id: "n1", title: "Money received", body: "RM80.00 from Aunty Siti", ts: Date.now() - 3600_000, kind: "success" },
