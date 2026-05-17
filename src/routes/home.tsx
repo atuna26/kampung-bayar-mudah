@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/kp/Shell";
-import { Send, QrCode, Download, Users, Eye, EyeOff, ArrowUpRight, ArrowDownLeft, Store, Banknote, HeartHandshake, ArrowRight } from "lucide-react";
+import { Send, QrCode, Download, Users, Eye, EyeOff, ArrowUpRight, ArrowDownLeft, Store, Banknote, HeartHandshake, ArrowRight, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { useStore, fmtRM } from "@/lib/kp/store";
 import { TimeText } from "@/lib/kp/TimeText";
@@ -13,6 +13,13 @@ function Home() {
   const txs = allTxs.slice(0, 4);
   const user = useStore(s => s.user);
   const [hide, setHide] = useState(false);
+
+  // Basic financial insights (FR8) — last 7 days spending vs received
+  const weekAgo = Date.now() - 7 * 86400_000;
+  const weekTxs = allTxs.filter(t => t.ts >= weekAgo && t.status === "completed");
+  const spent = weekTxs.filter(t => t.type === "sent" || t.type === "merchant" || t.type === "cashout").reduce((s,t)=>s+t.amount,0);
+  const received = weekTxs.filter(t => t.type === "received" || t.type === "cashin").reduce((s,t)=>s+t.amount,0);
+  const max = Math.max(spent, received, 1);
 
   return (
     <Shell>
@@ -41,6 +48,20 @@ function Home() {
           <Quick to="/receive" icon={Download} label="Receive" />
           <Quick to="/agent" icon={Users} label="Agents" />
         </div>
+
+        <section className="rounded-3xl bg-card border border-border p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-bold text-sm flex items-center gap-2"><TrendingUp className="h-4 w-4 text-primary"/>This week</h2>
+            <span className="text-[11px] text-muted-foreground">Last 7 days</span>
+          </div>
+          <div className="space-y-2.5">
+            <InsightBar label="Money in" value={received} max={max} tone="success" />
+            <InsightBar label="Money out" value={spent} max={max} tone="destructive" />
+          </div>
+          <p className="text-[11px] text-muted-foreground mt-3">
+            Net: <span className={`font-bold ${received-spent>=0 ? "text-success" : "text-destructive"}`}>{received-spent>=0 ? "+" : ""}{fmtRM(received-spent)}</span>
+          </p>
+        </section>
 
         <Link
           to="/guided"
@@ -80,6 +101,21 @@ function Quick({ to, icon: Icon, label }: any) {
       </span>
       <span className="text-xs font-semibold">{label}</span>
     </Link>
+  );
+}
+
+function InsightBar({ label, value, max, tone }: { label: string; value: number; max: number; tone: "success" | "destructive" }) {
+  const pct = Math.round((value / max) * 100);
+  return (
+    <div>
+      <div className="flex justify-between text-xs mb-1">
+        <span className="text-muted-foreground">{label}</span>
+        <span className={`font-bold ${tone === "success" ? "text-success" : "text-destructive"}`}>{fmtRM(value)}</span>
+      </div>
+      <div className="h-2 rounded-full bg-muted overflow-hidden">
+        <div className={`h-full rounded-full ${tone === "success" ? "bg-success" : "bg-destructive"}`} style={{ width: `${pct}%` }} />
+      </div>
+    </div>
   );
 }
 
