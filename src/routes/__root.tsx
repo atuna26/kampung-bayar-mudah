@@ -75,11 +75,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "KampungPay — Bayar. Mudah. Bersama." },
       { name: "description", content: "KampungPay: simple, trusted mobile payments for rural Sabah & Sarawak — works even with weak internet." },
-      { property: "og:title", content: "KampungPay" },
-      { property: "og:description", content: "Bayar. Mudah. Bersama." },
+      { property: "og:title", content: "KampungPay — Bayar. Mudah. Bersama." },
+      { property: "og:description", content: "KampungPay: simple, trusted mobile payments for rural Sabah & Sarawak — works even with weak internet." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "KampungPay — Bayar. Mudah. Bersama." },
+      { name: "twitter:description", content: "KampungPay: simple, trusted mobile payments for rural Sabah & Sarawak — works even with weak internet." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/90bc38b5-1506-4bd9-959a-8a712fa1a30e/id-preview-26a9fa63--a5ae8baa-ef73-4dd3-9f96-0564281fb4bf.lovable.app-1778785552512.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/90bc38b5-1506-4bd9-959a-8a712fa1a30e/id-preview-26a9fa63--a5ae8baa-ef73-4dd3-9f96-0564281fb4bf.lovable.app-1778785552512.png" },
     ],
     links: [
       {
