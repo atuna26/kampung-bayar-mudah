@@ -1,16 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/kp/Shell";
-import { Users, MapPin, Phone } from "lucide-react";
+import { Users, MapPin, Phone, Landmark, BadgeCheck } from "lucide-react";
+import { useT } from "@/lib/kp/i18n";
 
 export const Route = createFileRoute("/cashin")({ component: CashIn });
 
 function CashIn() {
+  const t = useT();
   return (
-    <Shell title="Top Up" back="/home">
+    <Shell title={t("Top Up")} back="/home">
       <div className="rounded-3xl bg-primary-soft p-5">
         <Users className="h-8 w-8 text-primary"/>
         <p className="mt-3 font-bold">Top up via your local agent</p>
-        <p className="text-sm text-foreground/80 mt-1">Bring cash to a nearby agent. They will add it to your wallet straight away — no fees.</p>
+        <p className="text-sm text-foreground/80 mt-1">Bring cash to a nearby agent. They will add it to your wallet straight away — {t("No hidden charges").toLowerCase()}.</p>
+      </div>
+      <div className="mt-3 rounded-2xl bg-card border border-border p-3 text-xs space-y-1.5">
+        <p className="flex items-center gap-2"><BadgeCheck className="h-3.5 w-3.5 text-primary"/>{t("Compatible with DuitNow QR")}</p>
+        <p className="flex items-center gap-2"><Landmark className="h-3.5 w-3.5 text-primary"/>{t("Supports Malaysian bank transfers")}</p>
       </div>
       <div className="mt-4 rounded-2xl bg-card border border-border p-4">
         <div className="flex items-start gap-3">
