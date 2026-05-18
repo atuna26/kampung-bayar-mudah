@@ -4,6 +4,7 @@ import { Send, QrCode, Download, Users, Eye, EyeOff, ArrowUpRight, ArrowDownLeft
 import { useState } from "react";
 import { useStore, fmtRM } from "@/lib/kp/store";
 import { TimeText } from "@/lib/kp/TimeText";
+import { useT } from "@/lib/kp/i18n";
 
 export const Route = createFileRoute("/home")({ component: Home });
 
@@ -12,7 +13,9 @@ function Home() {
   const allTxs = useStore(s => s.txs);
   const txs = allTxs.slice(0, 4);
   const user = useStore(s => s.user);
+  const conn = useStore(s => s.connectivity);
   const [hide, setHide] = useState(false);
+  const t = useT();
 
   // Basic financial insights (FR8) — last 7 days spending vs received
   const weekAgo = Date.now() - 7 * 86400_000;
@@ -25,38 +28,38 @@ function Home() {
     <Shell>
       <div className="space-y-5">
         <div>
-          <p className="text-sm text-muted-foreground">Welcome,</p>
+          <p className="text-sm text-muted-foreground">{t("Welcome,")}</p>
           <p className="text-lg font-bold truncate">{user.name}</p>
         </div>
 
         <div className="rounded-3xl p-5 text-primary-foreground shadow-lg" style={{ background: "linear-gradient(135deg, var(--primary), oklch(0.55 0.12 145))" }}>
           <div className="flex items-center justify-between">
-            <span className="text-xs uppercase tracking-wider opacity-90">Wallet Balance</span>
+            <span className="text-xs uppercase tracking-wider opacity-90">{t("Wallet Balance")}</span>
             <button onClick={()=>setHide(!hide)} aria-label="Hide balance" className="opacity-90">{hide ? <EyeOff className="h-4 w-4"/> : <Eye className="h-4 w-4"/>}</button>
           </div>
           <p className="text-4xl font-extrabold mt-2 tracking-tight">{hide ? "RM •••••" : fmtRM(balance)}</p>
           <p className="text-xs opacity-90 mt-1">Wallet no.: 0134567890</p>
           <div className="grid grid-cols-2 gap-2 mt-4">
-            <Link to="/cashin" className="flex items-center justify-center gap-1.5 h-10 rounded-full bg-white/20 text-sm font-semibold backdrop-blur"><Banknote className="h-4 w-4"/> Top Up</Link>
-            <Link to="/transactions" className="flex items-center justify-center gap-1.5 h-10 rounded-full bg-white/20 text-sm font-semibold backdrop-blur">History</Link>
+            <Link to="/cashin" className="flex items-center justify-center gap-1.5 h-10 rounded-full bg-white/20 text-sm font-semibold backdrop-blur"><Banknote className="h-4 w-4"/> {t("Top Up")}</Link>
+            <Link to="/transactions" className="flex items-center justify-center gap-1.5 h-10 rounded-full bg-white/20 text-sm font-semibold backdrop-blur">{t("History")}</Link>
           </div>
         </div>
 
         <div className="grid grid-cols-4 gap-3">
-          <Quick to="/send" icon={Send} label="Send" />
-          <Quick to="/qr" icon={QrCode} label="Scan QR" />
-          <Quick to="/receive" icon={Download} label="Receive" />
-          <Quick to="/agent" icon={Users} label="Agents" />
+          <Quick to="/send" icon={Send} label={t("Send")} />
+          <Quick to="/qr" icon={QrCode} label={t("Scan QR")} />
+          <Quick to="/receive" icon={Download} label={t("Receive")} />
+          <Quick to="/agent" icon={Users} label={t("Agents")} />
         </div>
 
         <section className="rounded-3xl bg-card border border-border p-4">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-sm flex items-center gap-2"><TrendingUp className="h-4 w-4 text-primary"/>This week</h2>
-            <span className="text-[11px] text-muted-foreground">Last 7 days</span>
+            <h2 className="font-bold text-sm flex items-center gap-2"><TrendingUp className="h-4 w-4 text-primary"/>{t("This week")}</h2>
+            <span className="text-[11px] text-muted-foreground">{t("Last 7 days")}</span>
           </div>
           <div className="space-y-2.5">
-            <InsightBar label="Money in" value={received} max={max} tone="success" />
-            <InsightBar label="Money out" value={spent} max={max} tone="destructive" />
+            <InsightBar label={t("Money in")} value={received} max={max} tone="success" />
+            <InsightBar label={t("Money out")} value={spent} max={max} tone="destructive" />
           </div>
           <p className="text-[11px] text-muted-foreground mt-3">
             Net: <span className={`font-bold ${received-spent>=0 ? "text-success" : "text-destructive"}`}>{received-spent>=0 ? "+" : ""}{fmtRM(received-spent)}</span>
@@ -80,13 +83,14 @@ function Home() {
 
         <section>
           <div className="flex items-center justify-between mb-2">
-            <h2 className="font-bold">Recent Transactions</h2>
-            <Link to="/transactions" className="text-sm font-semibold text-primary">View all</Link>
+            <h2 className="font-bold">{t("Recent Transactions")}</h2>
+            <Link to="/transactions" className="text-sm font-semibold text-primary">{t("View all")}</Link>
           </div>
           <div className="rounded-2xl bg-card border border-border divide-y divide-border overflow-hidden">
-            {txs.map(t => <TxRow key={t.id} t={t} />)}
+            {txs.map(tx => <TxRow key={tx.id} t={tx} />)}
             {txs.length === 0 && <p className="p-6 text-center text-muted-foreground text-sm">No transactions yet</p>}
           </div>
+          <p className="text-[11px] text-muted-foreground mt-2 text-center">{t("Compatible with DuitNow QR")} · {t("Supports Malaysian bank transfers")}</p>
         </section>
       </div>
     </Shell>
@@ -128,12 +132,17 @@ export function TxRow({ t }: { t: any }) {
     cashout: { Icon: Banknote, color: "text-destructive", sign: "-" },
   } as const;
   const c = cfg[t.type as keyof typeof cfg];
-  const statusBadge = t.status !== "completed" ? (
+  const conn = useStore(s => s.connectivity);
+  const statusLabel =
+    t.status === "pending" ? (conn === "offline" ? "Waiting for network" : "Pending sync") :
+    t.status === "syncing" ? "Syncing" :
+    t.status === "failed" ? "Failed" : null;
+  const statusBadge = statusLabel ? (
     <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${
       t.status === "pending" ? "bg-warning/30 text-warning-foreground" :
       t.status === "syncing" ? "bg-primary-soft text-primary" :
       "bg-destructive/15 text-destructive"
-    }`}>{t.status === "pending" ? "Pending" : t.status === "syncing" ? "Syncing" : "Failed"}</span>
+    }`}>{statusLabel}</span>
   ) : null;
   return (
     <div className="flex items-center gap-3 p-3.5">
@@ -141,6 +150,9 @@ export function TxRow({ t }: { t: any }) {
       <div className="flex-1 min-w-0">
         <p className="font-semibold truncate text-sm">{t.name}</p>
         <p className="text-xs text-muted-foreground flex items-center gap-1.5"><TimeText ts={t.ts} /> {statusBadge}</p>
+        {t.lastUpdated && t.status === "completed" && (t.lastUpdated - t.ts > 5000) && (
+          <p className="text-[10px] text-muted-foreground">Last updated <TimeText ts={t.lastUpdated} /></p>
+        )}
       </div>
       <p className={`font-bold text-sm ${c.color}`}>{c.sign}{fmtRM(t.amount)}</p>
     </div>
