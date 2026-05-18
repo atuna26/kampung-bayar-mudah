@@ -11,6 +11,7 @@ export interface Tx {
   note?: string;
   ts: number;
   status: TxStatus;
+  lastUpdated?: number;
 }
 
 export type Connectivity = "online" | "weak" | "offline";
@@ -33,6 +34,8 @@ interface State {
   pin: string;
   language: "en" | "ms";
   tier: Tier;
+  largeText: boolean;
+  elderMode: boolean;
   user: { name: string; phone: string };
   notifications: { id: string; title: string; body: string; ts: number; kind: "success" | "info" | "warn" | "error" }[];
 }
@@ -51,6 +54,8 @@ let state: State = {
   pin: "1234",
   language: "en",
   tier: "basic",
+  largeText: false,
+  elderMode: false,
   user: { name: "Amina Binti Abdullah", phone: "+60 13-456 7890" },
   notifications: [
     { id: "n1", title: "Money received", body: "RM80.00 from Aunty Siti", ts: Date.now() - 3600_000, kind: "success" },
@@ -65,9 +70,20 @@ export const store = {
   get: () => state,
   subscribe: (l: () => void) => { listeners.add(l); return () => { listeners.delete(l); }; },
   set: (patch: Partial<State>) => { state = { ...state, ...patch }; emit(); },
-  setConnectivity(c: Connectivity) { state = { ...state, connectivity: c }; emit(); },
+  setConnectivity(c: Connectivity) {
+    const prev = state.connectivity;
+    state = { ...state, connectivity: c };
+    emit();
+    // Auto-sync queued offline transactions when network is restored
+    if (c === "online" && prev !== "online") {
+      const pending = state.txs.filter(t => t.status === "pending" || t.status === "syncing");
+      if (pending.length > 0) {
+        setTimeout(() => store.syncPending(true), 600);
+      }
+    }
+  },
   addTx(tx: Omit<Tx, "id" | "ts">) {
-    const newTx: Tx = { ...tx, id: "t" + Math.random().toString(36).slice(2, 8), ts: Date.now() };
+    const newTx: Tx = { ...tx, id: "t" + Math.random().toString(36).slice(2, 8), ts: Date.now(), lastUpdated: Date.now() };
     state = { ...state, txs: [newTx, ...state.txs] };
     if (newTx.status === "completed") {
       if (newTx.type === "sent" || newTx.type === "merchant" || newTx.type === "cashout") state.balance -= newTx.amount;
@@ -76,24 +92,43 @@ export const store = {
     emit();
     return newTx;
   },
-  syncPending() {
+  syncPending(auto = false) {
     let bal = state.balance;
+    const synced: Tx[] = [];
     const txs = state.txs.map(t => {
       if (t.status === "pending" || t.status === "syncing") {
         if (t.type === "sent" || t.type === "merchant" || t.type === "cashout") bal -= t.amount;
         if (t.type === "received" || t.type === "cashin") bal += t.amount;
-        return { ...t, status: "completed" as TxStatus };
+        const updated = { ...t, status: "completed" as TxStatus, lastUpdated: Date.now() };
+        synced.push(updated);
+        return updated;
       }
       return t;
     });
     state = { ...state, txs, balance: bal };
     emit();
+    if (synced.length > 0) {
+      store.notify({
+        title: auto ? "Transactions synchronized" : "Sync complete",
+        body: `${synced.length} pending transaction${synced.length>1?"s":""} sent successfully.`,
+        kind: "success",
+      });
+      // Surface a brief synchronization success overlay
+      syncSuccessListeners.forEach(fn => fn(synced.length));
+    }
   },
   notify(n: Omit<State["notifications"][number], "id" | "ts">) {
     state = { ...state, notifications: [{ ...n, id: "n" + Math.random().toString(36).slice(2, 6), ts: Date.now() }, ...state.notifications] };
     emit();
   },
 };
+
+// Lightweight pub/sub so any mounted Shell can show a sync-success overlay
+const syncSuccessListeners = new Set<(count: number) => void>();
+export function onSyncSuccess(fn: (count: number) => void) {
+  syncSuccessListeners.add(fn);
+  return () => { syncSuccessListeners.delete(fn); };
+}
 
 export function useStore<T>(sel: (s: State) => T): T {
   return useSyncExternalStore(store.subscribe, () => sel(state), () => sel(state));

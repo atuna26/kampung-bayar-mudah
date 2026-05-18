@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Wallet, WifiOff, ShieldCheck, Users } from "lucide-react";
+import { Wallet, WifiOff, ShieldCheck, Users, Landmark, Smartphone, BadgeCheck } from "lucide-react";
 import logo from "@/assets/kampungpay-logo.png";
 
 export const Route = createFileRoute("/onboarding")({ component: Onboarding });
@@ -33,6 +33,11 @@ function Onboarding() {
         {slides.map((_, idx) => (
           <span key={idx} className={`h-2 rounded-full transition-all ${idx === i ? "w-8 bg-primary" : "w-2 bg-border"}`} />
         ))}
+      </div>
+      <div className="px-6 mb-3 flex flex-wrap gap-1.5 justify-center">
+        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full bg-primary-soft text-primary"><BadgeCheck className="h-3 w-3"/>Compatible with DuitNow QR</span>
+        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full bg-primary-soft text-primary"><Landmark className="h-3 w-3"/>Malaysian bank transfers</span>
+        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full bg-primary-soft text-primary"><Smartphone className="h-3 w-3"/>Apple / Google Wallet</span>
       </div>
       <div className="px-6 pb-8 space-y-3">
         {!last ? (

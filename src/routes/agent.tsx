@@ -3,16 +3,18 @@ import { Shell } from "@/components/kp/Shell";
 import { useState } from "react";
 import { UserPlus, Banknote, ShieldCheck, MapPin, Phone, CheckCircle2, ArrowDownToLine, ArrowUpFromLine } from "lucide-react";
 import { store, fmtRM } from "@/lib/kp/store";
+import { useT } from "@/lib/kp/i18n";
 
 export const Route = createFileRoute("/agent")({ component: Agent });
 
 function Agent() {
+  const t = useT();
   const [tab, setTab] = useState<"help"|"agent">("help");
   return (
-    <Shell title="Local Agents">
+    <Shell title={t("Local Agents")}>
       <div className="flex p-1 rounded-2xl bg-muted mb-4">
-        <button onClick={()=>setTab("help")} className={`flex-1 h-10 rounded-xl text-sm font-bold ${tab==="help"?"bg-card shadow":"text-muted-foreground"}`}>Find an Agent</button>
-        <button onClick={()=>setTab("agent")} className={`flex-1 h-10 rounded-xl text-sm font-bold ${tab==="agent"?"bg-card shadow":"text-muted-foreground"}`}>I'm an Agent</button>
+        <button onClick={()=>setTab("help")} className={`flex-1 h-10 rounded-xl text-sm font-bold ${tab==="help"?"bg-card shadow":"text-muted-foreground"}`}>{t("Find an Agent")}</button>
+        <button onClick={()=>setTab("agent")} className={`flex-1 h-10 rounded-xl text-sm font-bold ${tab==="agent"?"bg-card shadow":"text-muted-foreground"}`}>{t("I'm an Agent")}</button>
       </div>
       {tab==="help" ? <Help/> : <AgentDashboard/>}
     </Shell>
@@ -54,6 +56,7 @@ function Help() {
 }
 
 function AgentDashboard() {
+  const t = useT();
   const [op, setOp] = useState<null|"register"|"cashin"|"cashout">(null);
   const [done, setDone] = useState(false);
   const [amount, setAmount] = useState("");
@@ -71,21 +74,21 @@ function AgentDashboard() {
   if (!op) return (
     <div className="space-y-4">
       <div className="rounded-3xl p-5 text-primary-foreground" style={{ background: "linear-gradient(135deg, var(--primary), oklch(0.55 0.12 145))" }}>
-        <p className="text-xs uppercase tracking-wider opacity-90">Today's Commission</p>
+        <p className="text-xs uppercase tracking-wider opacity-90">{t("Today's Commission")}</p>
         <p className="text-3xl font-extrabold mt-1">RM24.50</p>
-        <p className="text-xs opacity-90 mt-1">7 transactions diselesaikan</p>
+        <p className="text-xs opacity-90 mt-1">7 transactions completed</p>
       </div>
       <div className="grid grid-cols-1 gap-3">
-        <AgentAction onClick={()=>setOp("register")} icon={UserPlus} title="Help Register New User" desc="Register a neighbour in a few simple steps"/>
-        <AgentAction onClick={()=>setOp("cashin")} icon={ArrowDownToLine} title="Cash Top-Up" desc="Receive tunai dan tambah ke dompet pengguna"/>
-        <AgentAction onClick={()=>setOp("cashout")} icon={ArrowUpFromLine} title="Cash Withdrawal" desc="Pay out cash from the user's wallet"/>
+        <AgentAction onClick={()=>setOp("register")} icon={UserPlus} title={t("Help Register New User")} desc="Register a neighbour in a few simple steps"/>
+        <AgentAction onClick={()=>setOp("cashin")} icon={ArrowDownToLine} title={t("Cash Top-Up")} desc="Receive cash and credit the user's wallet"/>
+        <AgentAction onClick={()=>setOp("cashout")} icon={ArrowUpFromLine} title={t("Cash Withdrawal")} desc="Pay out cash from the user's wallet"/>
       </div>
     </div>
   );
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold">{op==="register"?"Register New User":op==="cashin"?"Cash Top-Up":"Cash Withdrawal"}</h2>
+      <h2 className="text-xl font-bold">{op==="register"?t("Help Register New User"):op==="cashin"?t("Cash Top-Up"):t("Cash Withdrawal")}</h2>
       {op==="register" ? (
         <>
           <Input label="Full Name Customer" value={name} onChange={setName} placeholder="e.g. Aunty Aminah"/>
@@ -102,7 +105,7 @@ function AgentDashboard() {
       ) : (
         <>
           <Input label="User Phone Number" placeholder="+60 1X-XXX XXXX"/>
-          <Input label={`Amount ${op==="cashin"?"Tunai Diterima":"Withdrawal of"}`} value={amount} onChange={setAmount} placeholder="0.00" type="tel"/>
+          <Input label={`Amount ${op==="cashin"?"Cash Received":"Withdrawn"}`} value={amount} onChange={setAmount} placeholder="0.00" type="tel"/>
           <div className="rounded-2xl bg-card border border-border p-4 flex items-center gap-3">
             <Banknote className="h-6 w-6 text-primary"/>
             <div className="text-sm"><p className="font-bold">{op==="cashin"?"User hands over cash":"Pay cash to the user"}</p><p className="text-xs text-muted-foreground">Agent fee: 1% (RM{((Number(amount)||0)*0.01).toFixed(2)})</p></div>
