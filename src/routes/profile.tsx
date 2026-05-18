@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/kp/Shell";
 import { useStore, store, TIER_LIMITS, fmtRM } from "@/lib/kp/store";
-import { Globe, Lock, HelpCircle, Users, LogOut, ChevronRight, Phone, ShieldCheck, BadgeCheck, Landmark } from "lucide-react";
+import { Globe, Lock, HelpCircle, Users, LogOut, ChevronRight, Phone, ShieldCheck, BadgeCheck, Landmark, Type, Heart, Smartphone } from "lucide-react";
+import { useT } from "@/lib/kp/i18n";
 
 export const Route = createFileRoute("/profile")({ component: Profile });
 
@@ -9,13 +10,16 @@ function Profile() {
   const user = useStore(s => s.user);
   const lang = useStore(s => s.language);
   const tier = useStore(s => s.tier);
+  const largeText = useStore(s => s.largeText);
+  const elderMode = useStore(s => s.elderMode);
+  const t = useT();
   const tierInfo = TIER_LIMITS[tier];
   const verify = () => {
     store.set({ tier: "verified" });
     store.notify({ title: "Identity verified", body: "Your wallet is now linked to MyKad. Higher limits unlocked.", kind: "success" });
   };
   return (
-    <Shell title="Profile">
+    <Shell title={t("Profile")}>
       <div className="flex items-center gap-4 p-4 rounded-3xl bg-primary-soft">
         <div className="h-16 w-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-extrabold">A</div>
         <div className="min-w-0">
@@ -25,7 +29,7 @@ function Profile() {
         </div>
       </div>
 
-      <Section title="Account tier">
+      <Section title={t("Account tier")}>
         <div className="rounded-2xl bg-card border border-border p-4 space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Per transaction limit</span>
@@ -37,7 +41,7 @@ function Profile() {
           </div>
           {tier === "basic" ? (
             <button onClick={verify} className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center gap-2">
-              <BadgeCheck className="h-4 w-4"/> Verify with MyKad
+              <BadgeCheck className="h-4 w-4"/> {t("Verify with MyKad")}
             </button>
           ) : (
             <p className="text-xs text-success font-semibold flex items-center gap-1"><BadgeCheck className="h-3.5 w-3.5"/>Linked to MyKad national ID</p>
@@ -46,14 +50,33 @@ function Profile() {
         </div>
       </Section>
 
-      <Section title="Language">
+      <Section title={t("Language")}>
         <div className="flex p-1 rounded-2xl bg-muted">
           <button onClick={()=>store.set({language:"ms"})} className={`flex-1 h-11 rounded-xl text-sm font-bold ${lang==="ms"?"bg-card shadow":"text-muted-foreground"}`}>🇲🇾 Bahasa Malaysia</button>
           <button onClick={()=>store.set({language:"en"})} className={`flex-1 h-11 rounded-xl text-sm font-bold ${lang==="en"?"bg-card shadow":"text-muted-foreground"}`}>🇬🇧 English</button>
         </div>
       </Section>
 
-      <Section title="Settings">
+      <Section title={t("Accessibility")}>
+        <div className="rounded-2xl bg-card border border-border divide-y divide-border overflow-hidden">
+          <ToggleRow
+            icon={Type}
+            label={t("Large text")}
+            sub="Easier to read for elders"
+            on={largeText}
+            onChange={v => store.set({ largeText: v })}
+          />
+          <ToggleRow
+            icon={Heart}
+            label={t("Elder-friendly mode")}
+            sub="Simpler screens, larger buttons"
+            on={elderMode}
+            onChange={v => store.set({ elderMode: v })}
+          />
+        </div>
+      </Section>
+
+      <Section title={t("Settings")}>
         <List>
           <Item to="/profile" icon={Lock} label="Change PIN" sub="Update your 4-digit PIN"/>
           <Item to="/agent" icon={Users} label="My Local Agent" sub="Mr. Ramli · Kg. Sandakan"/>
@@ -62,18 +85,58 @@ function Profile() {
         </List>
       </Section>
 
-      <Section title="Security & trust">
+      <Section title={t("Security & trust")}>
         <div className="rounded-2xl bg-card border border-border p-4 space-y-2 text-sm">
           <p className="flex items-start gap-2"><ShieldCheck className="h-4 w-4 text-primary mt-0.5 shrink-0"/><span>End-to-end encrypted transactions, PIN + device-level protection.</span></p>
-          <p className="flex items-start gap-2"><Landmark className="h-4 w-4 text-primary mt-0.5 shrink-0"/><span>Works with Malaysian banks & DuitNow QR. Regulated under BNM e-money rules.</span></p>
+          <p className="flex items-start gap-2"><Landmark className="h-4 w-4 text-primary mt-0.5 shrink-0"/><span>Regulated under BNM e-money rules.</span></p>
+        </div>
+      </Section>
+
+      <Section title="Interoperability">
+        <div className="rounded-2xl bg-card border border-border p-4 grid grid-cols-1 gap-2 text-xs">
+          <InteropRow icon={QrBadge} label={t("Compatible with DuitNow QR")} />
+          <InteropRow icon={Landmark} label={t("Supports Malaysian bank transfers")} />
+          <InteropRow icon={Smartphone} label={t("Works with Apple Wallet & Google Wallet")} />
+          <InteropRow icon={Globe} label="Transfer to other Malaysian e-wallets" />
         </div>
       </Section>
 
       <Link to="/login" className="flex items-center justify-center gap-2 w-full h-14 rounded-2xl bg-destructive/10 text-destructive font-bold mt-4">
-        <LogOut className="h-5 w-5"/> Log Out
+        <LogOut className="h-5 w-5"/> {t("Log Out")}
       </Link>
       <p className="text-center text-xs text-muted-foreground mt-6">Pay. Easy. Together. 💚</p>
     </Shell>
+  );
+}
+
+function QrBadge(props: any) {
+  return <BadgeCheck {...props} />;
+}
+
+function InteropRow({ icon: Icon, label }: { icon: any; label: string }) {
+  return (
+    <p className="flex items-center gap-2">
+      <Icon className="h-4 w-4 text-primary shrink-0" />
+      <span>{label}</span>
+    </p>
+  );
+}
+
+function ToggleRow({ icon: Icon, label, sub, on, onChange }: { icon: any; label: string; sub: string; on: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <div className="flex items-center gap-3 p-4">
+      <span className="h-10 w-10 rounded-2xl bg-primary-soft flex items-center justify-center"><Icon className="h-5 w-5 text-primary"/></span>
+      <span className="flex-1"><p className="font-semibold text-sm">{label}</p><p className="text-xs text-muted-foreground">{sub}</p></span>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={on}
+        onClick={() => onChange(!on)}
+        className={`relative h-7 w-12 rounded-full transition-colors ${on ? "bg-primary" : "bg-muted"}`}
+      >
+        <span className={`absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition-all ${on ? "left-[1.4rem]" : "left-0.5"}`} />
+      </button>
+    </div>
   );
 }
 
